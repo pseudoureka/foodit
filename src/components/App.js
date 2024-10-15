@@ -5,6 +5,8 @@ import { getFoods } from "../api";
 function App() {
   const [items, setItems] = useState([]);
   const [order, setOrder] = useState("createdAt");
+  const [cursor, setCursor] = useState(null);
+
   const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
   const handleNewestClick = () => setOrder("createdAt");
@@ -15,14 +17,26 @@ function App() {
     setItems(nextItems);
   };
 
-  const handleLoad = async (orderQuery) => {
-    const { foods } = await getFoods(orderQuery);
-    setItems(foods);
+  const handleLoad = async (options) => {
+    const {
+      foods,
+      paging: { nextCursor },
+    } = await getFoods(options);
+    if (!options.cursor) {
+      setItems(foods);
+    } else {
+      setItems((prevItems) => [...prevItems, ...foods]);
+    }
+    setCursor(nextCursor);
   };
 
   useEffect(() => {
-    handleLoad(order);
+    handleLoad({ order });
   }, [order]);
+
+  const handleLoadMore = () => {
+    handleLoad({ order, cursor });
+  };
 
   return (
     <div>
@@ -31,6 +45,7 @@ function App() {
         <button onClick={handleCalorieClick}>칼로리순</button>
       </div>
       <FoodList items={sortedItems} onDelete={handleDelete} />
+      {cursor && <button onClick={handleLoadMore}>더보기</button>}
     </div>
   );
 }
