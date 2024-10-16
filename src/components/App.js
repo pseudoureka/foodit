@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import FoodList from "./FoodList";
 import { getFoods } from "../api";
+import FoodForm from "./FoodForm";
 
 function App() {
   const [items, setItems] = useState([]);
@@ -23,7 +24,6 @@ function App() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setSearch(e.target.search.value);
-    console.log(e.target);
   };
 
   const handleLoad = async (options) => {
@@ -60,6 +60,7 @@ function App() {
 
   return (
     <div>
+      <FoodForm />
       <form onSubmit={handleSearchSubmit}>
         <input name="search" />
         <button type="submit">검색</button>
