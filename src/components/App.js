@@ -6,6 +6,9 @@ function App() {
   const [items, setItems] = useState([]);
   const [order, setOrder] = useState("createdAt");
   const [cursor, setCursor] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState(null);
+  const [search, setSearch] = useState("");
 
   const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
@@ -17,11 +20,28 @@ function App() {
     setItems(nextItems);
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setSearch(e.target.search.value);
+    console.log(e.target);
+  };
+
   const handleLoad = async (options) => {
+    let results;
+    try {
+      setLoadingError(null);
+      setIsLoading(true);
+      results = await getFoods(options);
+    } catch (error) {
+      setLoadingError(error);
+      return;
+    } finally {
+      setIsLoading(false);
+    }
     const {
       foods,
       paging: { nextCursor },
-    } = await getFoods(options);
+    } = results;
     if (!options.cursor) {
       setItems(foods);
     } else {
@@ -31,21 +51,30 @@ function App() {
   };
 
   useEffect(() => {
-    handleLoad({ order });
-  }, [order]);
+    handleLoad({ order, search });
+  }, [order, search]);
 
   const handleLoadMore = () => {
-    handleLoad({ order, cursor });
+    handleLoad({ order, cursor, search });
   };
 
   return (
     <div>
+      <form onSubmit={handleSearchSubmit}>
+        <input name="search" />
+        <button type="submit">검색</button>
+      </form>
       <div>
         <button onClick={handleNewestClick}>최신순</button>
         <button onClick={handleCalorieClick}>칼로리순</button>
       </div>
       <FoodList items={sortedItems} onDelete={handleDelete} />
-      {cursor && <button onClick={handleLoadMore}>더보기</button>}
+      {cursor && (
+        <button disabled={isLoading} onClick={handleLoadMore}>
+          더보기
+        </button>
+      )}
+      {loadingError?.message && <p>{loadingError.message}</p>}
     </div>
   );
 }
