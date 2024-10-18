@@ -16,6 +16,10 @@ function App() {
   const handleNewestClick = () => setOrder("createdAt");
   const handleCalorieClick = () => setOrder("calorie");
 
+  const handleSubmitSuccess = (food) => {
+    setItems((prevItems) => [food, ...prevItems]);
+  };
+
   const handleDelete = (id) => {
     const nextItems = items.filter((item) => item.id !== id);
     setItems(nextItems);
@@ -60,7 +64,7 @@ function App() {
 
   return (
     <div>
-      <FoodForm />
+      <FoodForm onSubmitSuccess={handleSubmitSuccess} />
       <form onSubmit={handleSearchSubmit}>
         <input name="search" />
         <button type="submit">검색</button>
