@@ -1,4 +1,4 @@
-const BASE_URL = "https://learn.codeit.kr/1840/foods";
+const BASE_URL = "https://learn.codeit.kr/5840/foods";
 
 export async function getFoods({ order = "createdAt", cursor = "", limit = 6, search = "" }) {
   const query = `order=${order}&cursor=${cursor}&limit=${limit}&search=${search}`;
@@ -17,6 +17,18 @@ export async function createFood(formData) {
   });
   if (!response.ok) {
     throw new Error("정보를 생성하는데 실패했습니다.");
+  }
+  const body = response.json();
+  return body;
+}
+
+export async function updateFood(id, formData) {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: "PUT",
+    body: formData,
+  });
+  if (!response.ok) {
+    throw new Error("정보를 수정하는데 실패했습니다.");
   }
   const body = response.json();
   return body;

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./FoodForm.css";
 import FileInput from "./FileInput";
-import { createFood } from "../api";
 
 const INITIAL_VALUE = {
   title: "",
@@ -10,7 +9,13 @@ const INITIAL_VALUE = {
   imgFile: null,
 };
 
-function FoodForm({ onSubmitSuccess, initialValues = INITIAL_VALUE, initialPreview }) {
+function FoodForm({
+  onSubmitSuccess,
+  initialValues = INITIAL_VALUE,
+  initialPreview,
+  onSubmit,
+  onCancel,
+}) {
   const [values, setValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittingError, setSubmittingError] = useState(null);
@@ -49,7 +54,7 @@ function FoodForm({ onSubmitSuccess, initialValues = INITIAL_VALUE, initialPrevi
     try {
       setIsSubmitting(true);
       setSubmittingError(null);
-      result = await createFood(formData);
+      result = await onSubmit(formData);
     } catch (e) {
       setSubmittingError(e);
       return;
@@ -74,7 +79,7 @@ function FoodForm({ onSubmitSuccess, initialValues = INITIAL_VALUE, initialPrevi
       <input name="title" value={values.title} onChange={handleInputChange} />
       <input name="calorie" value={values.calorie} type="number" onChange={handleInputChange} />
       <textarea name="content" value={values.content} onChange={handleInputChange} />
-
+      {onCancel && <button onClick={onCancel}>취소</button>}
       <button type="submit" disabled={isSubmitting || !isFormValid}>
         저장
       </button>
