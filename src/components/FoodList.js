@@ -29,6 +29,8 @@ function FoodListItem({ item, onDelete, onEdit }) {
 function FoodList({ items, onDelete }) {
   const [editingId, setEditingId] = useState();
 
+  const handleCancel = () => setEditingId(null);
+
   return (
     <ul className="FoodList">
       {items.map((item) => {
@@ -38,7 +40,11 @@ function FoodList({ items, onDelete }) {
 
           return (
             <li key={item.id}>
-              <FoodForm initialValues={initialValues} initialPreview={imgUrl} />
+              <FoodForm
+                initialValues={initialValues}
+                initialPreview={imgUrl}
+                onCancel={handleCancel}
+              />
             </li>
           );
         }

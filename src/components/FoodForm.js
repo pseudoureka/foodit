@@ -10,7 +10,7 @@ const INITIAL_VALUE = {
   imgFile: null,
 };
 
-function FoodForm({ initialPreview, onSubmitSuccess, initialValues = INITIAL_VALUE }) {
+function FoodForm({ initialPreview, onSubmitSuccess, onCancel, initialValues = INITIAL_VALUE }) {
   const [values, setValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittingError, setSubmittingError] = useState(null);
@@ -54,15 +54,16 @@ function FoodForm({ initialPreview, onSubmitSuccess, initialValues = INITIAL_VAL
       result = await createFood(formData);
     } catch (e) {
       setSubmittingError(e);
+      return;
     } finally {
       setIsSubmitting(false);
     }
-    setValues(initialValues);
     const { food } = result;
     onSubmitSuccess(food);
+    setValues(initialValues);
   };
 
-  const isFormValid = values.title && values.calorie && values.content && values.imgFile;
+  const isFormValid = values.title && values.calorie && values.content;
 
   return (
     <form className="FoodForm" onSubmit={handleSubmit}>
@@ -75,6 +76,7 @@ function FoodForm({ initialPreview, onSubmitSuccess, initialValues = INITIAL_VAL
       <input name="title" value={values.title} onChange={handleInputChange} />
       <input name="calorie" value={values.calorie} type="number" onChange={handleInputChange} />
       <textarea name="content" value={values.content} onChange={handleInputChange} />
+      {onCancel && <button onClick={onCancel}>취소</button>}
       <button type="submit" disabled={isSubmitting || !isFormValid}>
         저장
       </button>
