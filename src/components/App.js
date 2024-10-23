@@ -16,10 +16,6 @@ function App() {
   const handleNewestClick = () => setOrder("createdAt");
   const handleCalorieClick = () => setOrder("calorie");
 
-  const handleSubmitSuccess = (food) => {
-    setItems((prevItems) => [food, ...prevItems]);
-  };
-
   const handleDelete = (id) => {
     const nextItems = items.filter((item) => item.id !== id);
     setItems(nextItems);
@@ -60,6 +56,10 @@ function App() {
 
   const handleLoadMore = () => {
     handleLoad({ order, cursor, search });
+  };
+
+  const handleSubmitSuccess = (food) => {
+    setItems((prevItems) => [food, ...prevItems]);
   };
 
   return (

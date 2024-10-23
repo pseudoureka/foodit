@@ -45,24 +45,23 @@ function FoodForm({ onSubmitSuccess }) {
     formData.append("calorie", values.calorie);
     formData.append("content", values.content);
     formData.append("imgFile", values.imgFile);
-
     let result;
-
     try {
       setIsSubmitting(true);
       setSubmittingError(null);
       result = await createFood(formData);
     } catch (e) {
       setSubmittingError(e);
+      return;
     } finally {
       setIsSubmitting(false);
     }
-    setValues(INITIAL_VALUE);
     const { food } = result;
     onSubmitSuccess(food);
+    setValues(INITIAL_VALUE);
   };
 
-  const isFormValid = values.title && values.calorie && values.content && values.imgFile;
+  const isFormValid = values.title && values.calorie && values.content;
 
   return (
     <form className="FoodForm" onSubmit={handleSubmit}>
@@ -70,6 +69,7 @@ function FoodForm({ onSubmitSuccess }) {
       <input name="title" value={values.title} onChange={handleInputChange} />
       <input name="calorie" value={values.calorie} type="number" onChange={handleInputChange} />
       <textarea name="content" value={values.content} onChange={handleInputChange} />
+
       <button type="submit" disabled={isSubmitting || !isFormValid}>
         저장
       </button>
