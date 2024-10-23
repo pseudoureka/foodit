@@ -33,9 +33,12 @@ function FoodList({ items, onDelete }) {
     <ul className="FoodList">
       {items.map((item) => {
         if (item.id === editingId) {
+          const { title, calorie, content, imgUrl } = item;
+          const initialValues = { title, calorie, content, imgUrl };
+
           return (
             <li key={item.id}>
-              <FoodForm />
+              <FoodForm initialValues={initialValues} />
             </li>
           );
         }

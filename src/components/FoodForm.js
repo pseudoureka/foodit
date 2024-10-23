@@ -10,8 +10,8 @@ const INITIAL_VALUE = {
   imgFile: null,
 };
 
-function FoodForm({ onSubmitSuccess }) {
-  const [values, setValues] = useState(INITIAL_VALUE);
+function FoodForm({ onSubmitSuccess, initialValues = INITIAL_VALUE }) {
+  const [values, setValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittingError, setSubmittingError] = useState(null);
 
@@ -57,7 +57,7 @@ function FoodForm({ onSubmitSuccess }) {
     } finally {
       setIsSubmitting(false);
     }
-    setValues(INITIAL_VALUE);
+    setValues(initialValues);
     const { food } = result;
     onSubmitSuccess(food);
   };
