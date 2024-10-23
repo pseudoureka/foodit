@@ -1,4 +1,4 @@
-const BASE_URL = "https://learn.codeit.kr/1841/foods";
+const BASE_URL = "https://learn.codeit.kr/1842/foods";
 
 export async function getFoods({ order = "createdAt", cursor = "", limit = 6, search = "" }) {
   const query = `order=${order}&cursor=${cursor}&limit=${limit}&search=${search}`;
