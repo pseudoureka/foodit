@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./FoodForm.css";
 import FileInput from "./FileInput";
-import { createFood } from "../api";
 
 const INITIAL_VALUE = {
   title: "",
@@ -10,7 +9,13 @@ const INITIAL_VALUE = {
   imgFile: null,
 };
 
-function FoodForm({ initialPreview, onSubmitSuccess, onCancel, initialValues = INITIAL_VALUE }) {
+function FoodForm({
+  onSubmitSuccess,
+  initialValues = INITIAL_VALUE,
+  initialPreview,
+  onSubmit,
+  onCancel,
+}) {
   const [values, setValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittingError, setSubmittingError] = useState(null);
@@ -45,13 +50,11 @@ function FoodForm({ initialPreview, onSubmitSuccess, onCancel, initialValues = I
     formData.append("calorie", values.calorie);
     formData.append("content", values.content);
     formData.append("imgFile", values.imgFile);
-
     let result;
-
     try {
       setIsSubmitting(true);
       setSubmittingError(null);
-      result = await createFood(formData);
+      result = await onSubmit(formData);
     } catch (e) {
       setSubmittingError(e);
       return;
